@@ -37,7 +37,7 @@ elif [ -n "${CICD_REPOSITORY_DIR}" ]; then
   cd "${CICD_REPOSITORY_DIR}" || exit 1
 fi
 
-CICD_BRANCH_DEFAULT="$(git branch | grep -oE 'main|master')"
+CICD_BRANCH_DEFAULT="$(git branch | grep -oE 'main|master' || echo 'main')"
 if [ -z "${CICD_BRANCH_TO}" ]; then CICD_BRANCH_TO=${CICD_BRANCH_DEFAULT}; fi
 if [ -z "${CICD_BRANCH_FROM}" ]; then CICD_BRANCH_FROM=${CICD_BRANCH_DEFAULT}; fi
 
