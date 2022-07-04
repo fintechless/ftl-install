@@ -2,6 +2,7 @@
 
 set -o pipefail
 
+aws --version > /dev/null 2>&1 || { pip3 install awscli; }
 aws --version > /dev/null 2>&1 || { echo >&2 "[ERROR] aws is missing. Aborting..."; exit 1; }
 docker --version > /dev/null 2>&1 || { echo >&2 "[ERROR] docker is missing. Aborting..."; exit 1; }
 jq --version > /dev/null 2>&1 || { echo >&2 "[ERROR] jq is missing. Aborting..."; exit 1; }
