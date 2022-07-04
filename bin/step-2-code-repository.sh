@@ -12,6 +12,18 @@ elif [ -f "${CICD_TEMP_VARS}" ]; then
 fi
 
 if [ -n "${CICD_REPOSITORY_URL}" ]; then
+  if [ -n "${GITHUB_TOKEN}" ]; then
+    if printf "%s\n" "${CICD_REPOSITORY_URL}" | grep -q "www.github.com"; then
+      CICD_REPOSITORY_URL="${CICD_REPOSITORY_URL/www.github.com/github.com}";
+    fi
+    if printf "%s\n" "${CICD_REPOSITORY_URL}" | grep -q "http://github.com"; then
+      CICD_REPOSITORY_URL="${CICD_REPOSITORY_URL/http:\/\/github.com/https://github.com}";
+    fi
+    if printf "%s\n" "${CICD_REPOSITORY_URL}" | grep -q "https://github.com"; then
+      CICD_REPOSITORY_URL="${CICD_REPOSITORY_URL/https:\/\/github.com/https://${GITHUB_TOKEN}@github.com}";
+    fi
+  fi
+
   echo "[EXEC] git clone ${CICD_REPOSITORY_URL}"
   git clone ${CICD_REPOSITORY_URL}
 
