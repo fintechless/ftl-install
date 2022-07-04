@@ -1,5 +1,6 @@
 #!/bin/sh
 
+aws --version > /dev/null 2>&1 || { echo >&2 "[ERROR] aws is missing. Aborting..."; exit 1; }
 git --version > /dev/null 2>&1 || { echo >&2 "[ERROR] git is missing. Aborting..."; exit 1; }
 
 if [ -z "${CICD_TEMP_VARS}" ]; then
@@ -16,6 +17,9 @@ if [ -n "${CICD_REPOSITORY_URL}" ]; then
 
   echo "[EXEC] cd $(echo ${CICD_REPOSITORY_URL} | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1)"
   cd "$(echo ${CICD_REPOSITORY_URL} | rev | cut -d '/' -f 1 | rev | cut -d '.' -f 1)" || exit 1
+elif [ -n "${CICD_REPOSITORY_STORAGE}" ]; then
+  echo "[EXEC] aws s3 sync ${CICD_REPOSITORY_STORAGE} ."
+  aws s3 sync ${CICD_REPOSITORY_STORAGE} . || exit 1
 elif [ -n "${CICD_REPOSITORY_DIR}" ]; then
   echo "[EXEC] cd ${CICD_REPOSITORY_DIR}"
   cd "${CICD_REPOSITORY_DIR}" || exit 1
