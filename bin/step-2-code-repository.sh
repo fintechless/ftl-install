@@ -48,12 +48,12 @@ echo "export CICD_REPOSITORY_DIR=\"$(pwd -P)\"" >> "${CICD_TEMP_VARS}"
 
 if [ -n "${CICD_BRANCH_TO}" ]; then
   echo "[EXEC] git checkout ${CICD_BRANCH_TO}"
-  git checkout ${CICD_BRANCH_TO}
+  git checkout ${CICD_BRANCH_TO} || echo "[WARN] git checkout failed. Ignoring..."
 fi
 
 if [ -n "${CICD_BRANCH_FROM}" ]; then
   echo "[EXEC] git checkout ${CICD_BRANCH_FROM}"
-  git checkout ${CICD_BRANCH_FROM}
+  git checkout ${CICD_BRANCH_FROM} || echo "[WARN] git checkout failed. Ignoring..."
 fi
 
 ###########################################
