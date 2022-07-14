@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o pipefail
+
 if [ -z "${FTL_CLOUD_PROVIDER}" ]; then
   echo "[ERROR] Environment variable 'FTL_CLOUD_PROVIDER' is missing. Aborting..."
   exit 1
