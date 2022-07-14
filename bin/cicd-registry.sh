@@ -12,6 +12,11 @@ if [ "${FTL_CLOUD_PROVIDER}" != "aws" ]; then
   exit 1
 fi
 
+if [ -z "${FTL_RUNTIME_BUCKET}" ]; then
+  echo "[ERROR] Environment variable 'FTL_RUNTIME_BUCKET' is missing. Aborting..."
+  exit 1
+fi
+
 if [ -n "${CODEBUILD_SRC_DIR}" ]; then
   CWD=${CODEBUILD_SRC_DIR}
 else
