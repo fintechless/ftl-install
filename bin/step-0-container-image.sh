@@ -28,6 +28,22 @@ if [ -z "${CICD_ECR_PLATFORM}" ]; then
   if [ -n "${3}" ]; then CICD_ECR_PLATFORM="${3}"; else CICD_ECR_PLATFORM="linux/amd64"; fi
 fi
 
+if [ -n "${CICD_REPOSITORY_STORAGE}" ]; then
+  CWD="$( cd "$(dirname "$0")/.." >/dev/null 2>&1 || exit 1; pwd -P )"
+  LWD="$( cd "$(dirname "$0")" >/dev/null 2>&1 || exit 1; pwd -P )"
+
+  if [ -f "${CWD}/bin/step-1-provider-auth.sh" ]; then
+    echo "[EXEC] /bin/bash ${CWD}/bin/step-1-provider-auth.sh"
+    /bin/bash "${CWD}/bin/step-1-provider-auth.sh"
+  else
+    echo "[EXEC] /bin/bash ${LWD}/step-1-provider-auth.sh"
+    /bin/bash "${LWD}/step-1-provider-auth.sh"
+  fi || { echo >&2 "[ERROR] Failed to run 'step-1-provider-auth.sh'. Aborting..."; exit 1; }
+
+  echo "[EXEC] aws s3 sync ${CICD_REPOSITORY_STORAGE} ."
+  aws s3 sync ${CICD_REPOSITORY_STORAGE} . || exit 1
+fi
+
 if [ -f "${CICD_REPOSITORY_DIR}/.dockercontainers" ]; then
   DOCKER_CONTAINERS="$(cat ${CICD_REPOSITORY_DIR}/.dockercontainers)"
 else
